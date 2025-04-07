@@ -81,3 +81,272 @@ Email должен содержать корректный email, а номер 
 корректный номер.
 Все поля должны быть заполнены.
 5.10.6 Проверить работу валидаторов полей ввода.
+
+
+control view
+
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
+using System;
+
+namespace YourNamespace.ViewModels;
+
+public partial class ControlsViewModel : ObservableObject
+{
+    [ObservableProperty]
+    private string? _selectedLanguage;
+    
+    public List<string> Languages { get; } = new()
+    {
+        "C#",
+        "JavaScript",
+        "Python",
+        "Java",
+        "C++",
+        "TypeScript"
+    };
+    
+    [ObservableProperty]
+    private double _opacityValue = 1.0;
+    
+    [ObservableProperty]
+    private DateTimeOffset? _birthDate;
+    
+    public int Age => BirthDate.HasValue ? 
+        DateTime.Now.Year - BirthDate.Value.Year : 0;
+}
+
+control view Adams
+
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:YourNamespace.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="YourNamespace.Views.ControlsView">
+    
+    <Design.DataContext>
+        <vm:ControlsViewModel/>
+    </Design.DataContext>
+    
+    <ScrollViewer>
+        <StackPanel Spacing="10" Margin="20">
+            <!-- 5.2 TextBlock -->
+            <Border BorderBrush="Gray" BorderThickness="1" Padding="10">
+                <StackPanel>
+                    <TextBlock TextWrapping="Wrap">
+                        <!-- 5.2.4 Span with first two Runs -->
+                        <Span FontSize="18" Background="LightGray">
+                            <Run Foreground="Red" Text="This is first run"/>
+                            <Run Foreground="Blue" Text="This is second run"/>
+                        </Span>
+                        
+                        <!-- 5.2.3 LineBreak -->
+                        <LineBreak/>
+                        
+                        <!-- 5.2.5 Formatted text -->
+                        <Bold><Run Text="Bold text"/></Bold>
+                        <Italic><Run Text="Italic text"/></Italic>
+                        <Underline><Run Text="Underlined text"/></Underline>
+                        
+                        <!-- 5.2.6 Image -->
+                        <InlineUIContainer BaselineAlignment="Baseline">
+                            <Image Width="32" Height="32" VerticalAlignment="Top"
+                                   Source="/Assets/avalonia-logo.ico"/>
+                        </InlineUIContainer>
+                        
+                        <!-- 5.2.7 Button -->
+                        <InlineUIContainer BaselineAlignment="Baseline">
+                            <Button Content="Inline Button" Margin="5,0"/>
+                        </InlineUIContainer>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+            
+            <!-- 5.3 TextBox -->
+            <Border BorderBrush="Gray" BorderThickness="1" Padding="10">
+                <StackPanel Spacing="10">
+                    <TextBox Watermark="Login"/>
+                    <TextBox Watermark="Password" PasswordChar="*"/>
+                    <TextBox Watermark="Email" 
+                             TextInputOptions.ContentType="Email"/>
+                    <TextBox Watermark="Code" 
+                             TextInputOptions.ContentType="Digits"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- 5.4 CheckBox -->
+            <Border BorderBrush="Gray" BorderThickness="1" Padding="10">
+                <CheckBox Content="I agree with terms and conditions"/>
+            </Border>
+            
+            <!-- 5.5 RadioButton -->
+            <Border BorderBrush="Gray" BorderThickness="1" Padding="10">
+                <StackPanel>
+                    <RadioButton GroupName="Group1" Content="Option 1"/>
+                    <RadioButton GroupName="Group1" Content="Option 2"/>
+                    <RadioButton GroupName="Group2" Content="Option A"/>
+                    <RadioButton GroupName="Group2" Content="Option B"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- 5.6 CalendarDatePicker -->
+            <Border BorderBrush="Gray" BorderThickness="1" Padding="10">
+                <StackPanel>
+                    <CalendarDatePicker SelectedDate="{Binding BirthDate}"
+                                       Watermark="Select birth date"/>
+                    <TextBlock Text="{Binding Age, StringFormat='Age: {0}'}"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- 5.7 ComboBox -->
+            <Border BorderBrush="Gray" BorderThickness="1" Padding="10">
+                <StackPanel>
+                    <ComboBox ItemsSource="{Binding Languages}"
+                              SelectedItem="{Binding SelectedLanguage}"
+                              Width="200"/>
+                    <TextBlock Text="{Binding SelectedLanguage, 
+                                     StringFormat='Selected: {0}'}"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- 5.8 Slider -->
+            <Border BorderBrush="Gray" BorderThickness="1" Padding="10">
+                <StackPanel>
+                    <Slider Minimum="0" Maximum="1" Value="{Binding OpacityValue}"
+                            Width="200"/>
+                    <Rectangle Fill="Blue" Height="50" Width="200"
+                               Opacity="{Binding OpacityValue}"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- 5.9 ToggleSwitch -->
+            <Border BorderBrush="Gray" BorderThickness="1" Padding="10">
+                <ToggleSwitch OnContent="Включено" OffContent="Выключено"/>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
+
+5.10
+
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace YourNamespace.Models;
+
+public partial class UserCreditionals : ObservableValidator
+{
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = "Login is required")]
+    [RegularExpression(@"^[a-zA-Z0-9_]{3,20}$", 
+        ErrorMessage = "Login must be 3-20 chars (letters, digits, _)")]
+    private string _name = string.Empty;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = "Password is required")]
+    [MinLength(8, ErrorMessage = "Password must be at least 8 chars")]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$",
+        ErrorMessage = "Password must contain upper/lower case, digit and special char")]
+    private string _password = string.Empty;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = "Password confirmation is required")]
+    [CustomValidation(typeof(UserCreditionals), nameof(ValidatePasswordConfirm))]
+    private string _passwordConfirm = string.Empty;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = "Email is required")]
+    [EmailAddress(ErrorMessage = "Invalid email format")]
+    private string _email = string.Empty;
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = "Phone is required")]
+    [Phone(ErrorMessage = "Invalid phone number")]
+    private string _phone = string.Empty;
+    
+    public static ValidationResult ValidatePasswordConfirm(string confirm, ValidationContext context)
+    {
+        var instance = (UserCreditionals)context.ObjectInstance;
+        return instance.Password == confirm ? 
+            ValidationResult.Success : 
+            new ValidationResult("Passwords don't match");
+    }
+}
+
+registration cs
+
+using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace YourNamespace.ViewModels;
+
+public partial class RegistrationViewModel : ObservableObject
+{
+    [ObservableProperty]
+    private UserCreditionals _userCreditionals = new();
+}
+
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:YourNamespace.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="500"
+             x:Class="YourNamespace.Views.RegistrationView">
+    
+    <Design.DataContext>
+        <vm:RegistrationViewModel/>
+    </Design.DataContext>
+    
+    <ScrollViewer>
+        <StackPanel Spacing="10" Margin="20" Width="300">
+            <TextBox Watermark="Login" 
+                     Text="{Binding UserCreditionals.Name, Mode=TwoWay}"
+                     DataValidationErrors.Errors="{Binding UserCreditionals.Errors[Name]}"/>
+            
+            <TextBox Watermark="Password" PasswordChar="*"
+                     Text="{Binding UserCreditionals.Password, Mode=TwoWay}"
+                     DataValidationErrors.Errors="{Binding UserCreditionals.Errors[Password]}"/>
+            
+            <TextBox Watermark="Confirm Password" PasswordChar="*"
+                     Text="{Binding UserCreditionals.PasswordConfirm, Mode=TwoWay}"
+                     DataValidationErrors.Errors="{Binding UserCreditionals.Errors[PasswordConfirm]}"/>
+            
+            <TextBox Watermark="Email"
+                     Text="{Binding UserCreditionals.Email, Mode=TwoWay}"
+                     DataValidationErrors.Errors="{Binding UserCreditionals.Errors[Email]}"/>
+            
+            <TextBox Watermark="Phone"
+                     Text="{Binding UserCreditionals.Phone, Mode=TwoWay}"
+                     DataValidationErrors.Errors="{Binding UserCreditionals.Errors[Phone]}"/>
+            
+            <Button Content="Register" Margin="0,20"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
+
+Adams cs
+
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+
+namespace YourNamespace.Views;
+
+public partial class RegistrationView : UserControl
+{
+    public RegistrationView()
+    {
+        InitializeComponent();
+    }
+    
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
+}
