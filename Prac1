@@ -67,3 +67,37 @@ Grid.ColumnDefinitions=”*,2*”, Grid.RowDefinitions=”Auto,100”
 Orientation=”Horizontal”, для другой Orientation=”Vertical”.
 5.4.6 В панелях расположить по 4 TextBlock с текстом, указать им
 различный размер.
+
+
+#1
+
+<DockPanel Width="400" Height="400">
+    <Rectangle Fill="Red" DockPanel.Dock="Top" Height="100"/>
+    <Rectangle Fill="Blue" DockPanel.Dock="Left" Width="100"/>
+    <Rectangle Fill="Green" DockPanel.Dock="Bottom" Height="100"/>
+    <Rectangle Fill="Yellow" DockPanel.Dock="Right" Width="100"/>
+    <Rectangle Fill="Purple"/>
+</DockPanel>
+#2
+<Grid Width="400" Height="400" 
+      ColumnDefinitions="*,2*" 
+      RowDefinitions="Auto,100">
+    <Rectangle Fill="Red" Grid.Column="0" Grid.Row="0"/>
+    <Rectangle Fill="Blue" Grid.Column="1" Grid.Row="0"/>
+    <Rectangle Fill="Green" Grid.Column="0" Grid.Row="1"/>
+    <Rectangle Fill="Yellow" Grid.Column="1" Grid.Row="1"/>
+</Grid>
+#3
+<StackPanel Orientation="Horizontal">
+    <TextBlock Text="Текст 1" FontSize="12"/>
+    <TextBlock Text="Текст 2" FontSize="16"/>
+    <TextBlock Text="Текст 3" FontSize="20"/>
+    <TextBlock Text="Текст 4" FontSize="24"/>
+</StackPanel>
+
+<StackPanel Orientation="Vertical">
+    <TextBlock Text="Текст A" FontSize="10"/>
+    <TextBlock Text="Текст B" FontSize="14"/>
+    <TextBlock Text="Текст C" FontSize="18"/>
+    <TextBlock Text="Текст D" FontSize="22"/>
+</StackPanel>
