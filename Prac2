@@ -1,3 +1,7 @@
+Серьезность	Код	Описание	Проект	Файл	Строка	Состояние подавления
+Ошибка (активно)	AXN0001	Avalonia x:Name generator was unable to generate names for type 'Prac2.Views.ControlsView'. The type 'Prac2.Views.ControlsView' does not exist in the assembly.	Prac2	C:\Temp\!ISPP-21\YP01\Prac2\Prac2\CSC	1	
+
+
 Task 
 
 5.1 Создайте новую страницу ControlsView и класс ControlsViewModel,
